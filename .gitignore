@@ -1,0 +1,7 @@
+.vs/
+.vscode/
+Library/
+Logs/
+Temp/
+Assembly-CSharp.csproj* 
+Pyrexia.sln
