@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
 
     private float fireTimer = 0f;
 
+    public bool isFullAuto = true;
+
+
     private CharacterController controller;
     private Vector2 inputVector;
     private Vector3 smoothMove;
@@ -56,6 +59,11 @@ public class PlayerController : MonoBehaviour
         RotateTowardMouse();
 
         fireTimer -= Time.deltaTime;
+        if (isFullAuto && controls.Player.Shoot.ReadValue<float>() > 0 && fireTimer <= 0f)
+        {
+            FireProjectile();
+            fireTimer = fireRate;
+        }
     }
 
     // Player rotation towards mouse position
@@ -79,17 +87,18 @@ public class PlayerController : MonoBehaviour
     }
 
     // Fire projectile from the shoot point
-        void FireProjectile()
+    void FireProjectile()
     {
         if (projectilePrefab == null || shootPoint == null) return;
 
         GameObject proj = Instantiate(projectilePrefab, shootPoint.position, Quaternion.identity);
         Vector3 direction = transform.forward;
 
-        proj.GetComponent<Projectile>().Initialize(direction);
+        // Pass the player (gameObject) as the shooter
+        proj.GetComponent<Projectile>().Initialize(direction, gameObject);
     }
 
-        void ShootPressed()
+    void ShootPressed()
     {
         if (fireTimer <= 0f)
         {
